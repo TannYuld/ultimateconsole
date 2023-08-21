@@ -73,8 +73,9 @@ public class Window extends JFrame {
     public void setProperty(WindowProperties prop)
     {
         property = prop;
-
-        setSize(new Dimension(property.getWindowWidth(), prop.getWindowHeight()));
+        OUTPUT_TEXTAREA.setLineWrap(prop.getLineWrapping());
+        
+        setSize(new Dimension(prop.getWindowWidth(), prop.getWindowHeight()));
         LAYERED_PANE.setSize(new Dimension(property.getWindowWidth(), prop.getWindowHeight()));
         setLocation(property.getWindowPosX(), property.getWindowPosY());
         setResizable(property.getCanResize());
@@ -94,7 +95,7 @@ public class Window extends JFrame {
         INPUT_TEXTAREA.setCaretColor(prop.getInputTextCaretColor());
         INPUT_TEXTAREA.setSelectedTextColor(prop.getInputSelectedTextColor());
         OUTPUT_TEXTAREA.setSelectedTextColor(prop.getOutputSelectedTextColor());
-
+        
         setAlwaysOnTop(prop.getAlwaysOnTop());
 
         if(prop.getFullscreen())

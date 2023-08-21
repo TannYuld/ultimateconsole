@@ -15,6 +15,7 @@ public class WindowProperties
     private boolean canResize = false;
     private boolean alwaysOnTop = false;
     private boolean isFullscreen = false;
+    private boolean lineWrapping = false;
 
     private Insets outputTextMargin = new Insets(-5,3,0,0);
     private Font outputTextFont = new Font("Monospaced", Font.PLAIN, 19);
@@ -30,14 +31,6 @@ public class WindowProperties
 
     CloseButtonOperation defaultCloseButtonOperation = CloseButtonOperation.EXIT;
 
-    public WindowProperties windowHeight(int arg)
-    {
-        windowHeight = arg;
-        if(assignedWindow != null) {
-            assignedWindow.setProperty(this);}
-        return this;
-    }
-
     private WindowProperties changeProperties()
     {
         if(assignedWindow != null)
@@ -45,6 +38,12 @@ public class WindowProperties
             assignedWindow.setProperty(this);
         }
         return this;
+    }
+    
+    public WindowProperties windowHeight(int arg)
+    {
+        windowHeight = arg;
+        return changeProperties();
     }
 
     public WindowProperties windowWidth(int arg)
@@ -148,6 +147,12 @@ public class WindowProperties
         defaultCloseButtonOperation = arg;
         return changeProperties();
     }
+    
+    public WindowProperties lineWrapping(Boolean arg)
+    {
+    	lineWrapping = arg;
+        return changeProperties();
+    }
 
     protected void setAssignedWindow(Window arg)
     {
@@ -172,4 +177,6 @@ public class WindowProperties
     protected Color getInputTextCaretColor() { return inputTextCaretColor;}
     protected int getDefaultCloseButtonOperation() { return defaultCloseButtonOperation.value;}
     protected boolean getFullscreen(){ return isFullscreen;}
+    protected boolean getLineWrapping(){return lineWrapping;}
+	
 }

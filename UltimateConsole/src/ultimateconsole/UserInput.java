@@ -86,10 +86,7 @@ public class UserInput
 
     public int getResult()
     {
-        if(inputType == UserInputTypes.YesNo){throw new RuntimeException("This type of result does not support YesNo questions !");}
-        else if(inputType == UserInputTypes.Selection){return selectedQuestion;}
-        else{return selectedQuestion;}
-
+    	return selectedQuestion;
     }
 
     public boolean getBooleanResult()

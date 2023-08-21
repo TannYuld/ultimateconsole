@@ -9,12 +9,12 @@ class InputKeyControl extends Thread implements KeyListener
 {
 
     private boolean listensInput = false;
-    private boolean customUserInput = false;
-
+    private boolean listenForAnyKey = false;
     private UserInput userInput = null;
 
     private final Console CONSOLE;
     private final DrawPanel DRAW_PANEL;
+    
 
     ComponentAdapter resizeEvent = new ComponentAdapter() {
         public void componentResized(ComponentEvent e) {
@@ -25,8 +25,8 @@ class InputKeyControl extends Thread implements KeyListener
     private void pressedEnter()
     {
         listensInput = false;
+        listenForAnyKey = false;
         if(userInput != null){userInput = null;}
-        clearScreen();
         synchronized(CONSOLE)
         {
             CONSOLE.notify();
@@ -37,36 +37,31 @@ class InputKeyControl extends Thread implements KeyListener
         }
     }
 
-    protected InputKeyControl(DrawPanel panel, Console Console)
+    protected InputKeyControl(Console Console)
     {
-        this.DRAW_PANEL = panel;
         this.CONSOLE = Console;
+        DRAW_PANEL = CONSOLE.getCurrentWindow().getDrawPanel();
     }
 
     @Override
-    public void keyTyped(KeyEvent e)
-    {
-
-    }
+    public void keyTyped(KeyEvent e){}
 
     @Override
     public void keyPressed(KeyEvent e)
     {
         if(listensInput)
-        {
-
-            if(userInput != null)
+        {       
+            if(e.getKeyCode() == KeyEvent.VK_ENTER || listenForAnyKey) 
             {
-                if(userInput.getInputType() != UserInputTypes.Numeric && e.getKeyCode() == KeyEvent.VK_ENTER)
-                {
-                    pressedEnter();
-                }
-            }else if(e.getKeyCode() == KeyEvent.VK_ENTER)
-            {
-                pressedEnter();
+            	if((userInput != null &&
+                		userInput.getInputType() != UserInputTypes.Numeric) || userInput == null) 
+            	{
+            		if(userInput != null) {clearScreen();}
+            		pressedEnter();
+            	}
             }
 
-            if(customUserInput && userInput != null && userInput.getInputType() != UserInputTypes.Numeric)
+            if(userInput != null && userInput.getInputType() != UserInputTypes.Numeric)
             {
                 switch (e.getKeyCode()) {
                     case KeyEvent.VK_LEFT -> {
@@ -78,7 +73,7 @@ class InputKeyControl extends Thread implements KeyListener
                         paintWindow();
                     }
                 }
-            }else if(customUserInput  && userInput != null)
+            }else if(userInput != null)
             {
                 switch (e.getKeyCode())
                 {
@@ -104,7 +99,6 @@ class InputKeyControl extends Thread implements KeyListener
             clearScreen();
             userInput.setSelectedQuestion(idx);
             listensInput = false;
-            customUserInput = false;
             if(userInput != null){userInput = null;}
             synchronized (CONSOLE)
             {
@@ -118,7 +112,7 @@ class InputKeyControl extends Thread implements KeyListener
 
     private void clearScreen()
     {
-        DRAW_PANEL.clearRect();
+    	DRAW_PANEL.clearRect();
         DRAW_PANEL.clearText();
         DRAW_PANEL.removeComponentListener(resizeEvent);
         DRAW_PANEL.repaint();
@@ -128,9 +122,9 @@ class InputKeyControl extends Thread implements KeyListener
     {
         if(userInput.getInputType() != UserInputTypes.Numeric)
         {
-            DRAW_PANEL.paintUserInputSelection(userInput);
-            DRAW_PANEL.setSelectedFillRect(
-                    DRAW_PANEL.getRectDrawList().get(userInput.getSelectedQuestion())
+        	DRAW_PANEL.paintUserInputSelection(userInput);
+        	DRAW_PANEL.setSelectedFillRect(
+        			DRAW_PANEL.getRectDrawList().get(userInput.getSelectedQuestion())
             );
         }
         else{DRAW_PANEL.paintUserInputNumeric(userInput);}
@@ -140,17 +134,22 @@ class InputKeyControl extends Thread implements KeyListener
 
     @Override
     public void keyReleased(KeyEvent e) {}
-
-    public void run()
+    
+    protected void startInputListening() 
     {
-        super.run();
+    	super.run();
         listensInput = true;
     }
-
-    protected void runWithCustomUserInput(UserInput userInput)
+    
+    protected void startInputListeningForAnyKey() 
     {
-        run();
-        customUserInput = true;
+    	startInputListening();
+        listenForAnyKey = true;
+    }
+    
+    protected void startInputListeningWithUserInput(UserInput userInput)
+    {
+    	startInputListening();
         this.userInput = userInput;
         paintWindow();
         DRAW_PANEL.addComponentListener(resizeEvent);

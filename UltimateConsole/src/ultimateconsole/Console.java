@@ -23,7 +23,7 @@ public class Console {
         CONSOLE_OUTPUT = window.getOutputTextArea();
         CONSOLE_INPUT = window.getInputTextArea();
 
-        KEY_CONTROL = new InputKeyControl(window.getDrawPanel(), this);
+        KEY_CONTROL = new InputKeyControl(this);
         
         activateConsole();
     }
@@ -34,7 +34,7 @@ public class Console {
         CONSOLE_OUTPUT = window.getOutputTextArea();
         CONSOLE_INPUT = window.getInputTextArea();
 
-        KEY_CONTROL = new InputKeyControl(window.getDrawPanel(), this);
+        KEY_CONTROL = new InputKeyControl(this);
     	if(selfActivation) 
     	{
     		activateConsole();
@@ -61,6 +61,11 @@ public class Console {
         
         return this;
     }
+    
+    public Window getCurrentWindow()
+	{
+		return WINDOW;
+	}
 
     public static void terminateAllConsoles()
     {
@@ -137,6 +142,14 @@ public class Console {
             throw new RuntimeException(e);
         }
     }
+    
+    public void clearll(int arg)
+    {
+    	for(int i = arg; arg > 0; arg--) 
+    	{
+    		clearll();
+    	}
+    }
 
     public void clearLastLine()
     {
@@ -201,6 +214,7 @@ public class Console {
         try
         {
             setInputEditable(true);
+            
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -209,7 +223,7 @@ public class Console {
         synchronized(this) {
             try
             {
-                KEY_CONTROL.run();
+                KEY_CONTROL.startInputListening();
                 this.wait();
             } catch (InterruptedException e) {
                 System.out.println("Caught:" + e);
@@ -264,8 +278,19 @@ public class Console {
 
         return endState;
     }
-
-
+    
+    public void waitForAnyKey() 
+    {
+    	synchronized(this) {
+            try
+            {
+                KEY_CONTROL.startInputListeningForAnyKey();
+                this.wait();
+            } catch (InterruptedException e) {
+                System.out.println("Caught:" + e);
+            }
+        }
+    }
 
     public void askInput(UserInput userInput)
     {
@@ -276,7 +301,7 @@ public class Console {
         {
             try
             {
-                KEY_CONTROL.runWithCustomUserInput(userInput);
+                KEY_CONTROL.startInputListeningWithUserInput(userInput);
                 this.wait();
             } catch (InterruptedException e) {
                 System.out.println("Caught:" + e);
