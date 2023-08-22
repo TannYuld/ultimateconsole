@@ -1,6 +1,6 @@
 package ultimateconsole;
 
-public enum FinalState
+public enum FinalAction
 {
     REMOVE,
     DO_NOTHING

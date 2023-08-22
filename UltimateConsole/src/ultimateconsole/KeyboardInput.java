@@ -5,7 +5,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-class InputKeyControl extends Thread implements KeyListener
+class KeyboardInput extends Thread implements KeyListener
 {
 
     private boolean listensInput = false;
@@ -37,7 +37,7 @@ class InputKeyControl extends Thread implements KeyListener
         }
     }
 
-    protected InputKeyControl(Console Console)
+    protected KeyboardInput(Console Console)
     {
         this.CONSOLE = Console;
         DRAW_PANEL = CONSOLE.getCurrentWindow().getDrawPanel();

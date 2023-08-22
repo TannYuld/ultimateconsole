@@ -9,21 +9,22 @@ import java.util.ArrayList;
 public class Console {
     private final JTextArea CONSOLE_OUTPUT;
     private final JTextField CONSOLE_INPUT;
-    private final InputKeyControl KEY_CONTROL;
     private final Window WINDOW;
+    private final KeyboardInput KEYBOARD_INPUT_HANDLER;
+    private final InputStreamHandler INPUT_STREAM_HANDLER;
 
+    private Window activeWindow = null;
+    
     private String trueForm = "yes";
     private String falseForm = "no";
-
-    private final ArrayList<InputRequestStack> INPUT_REQUEST_STACK_LIST = new ArrayList<>();
 
     public Console(Window window)
     {
     	WINDOW = window;
         CONSOLE_OUTPUT = window.getOutputTextArea();
         CONSOLE_INPUT = window.getInputTextArea();
-
-        KEY_CONTROL = new InputKeyControl(this);
+        KEYBOARD_INPUT_HANDLER = new KeyboardInput(this);
+        INPUT_STREAM_HANDLER = new InputStreamHandler();
         
         activateConsole();
     }
@@ -33,8 +34,9 @@ public class Console {
     	WINDOW = window;
         CONSOLE_OUTPUT = window.getOutputTextArea();
         CONSOLE_INPUT = window.getInputTextArea();
-
-        KEY_CONTROL = new InputKeyControl(this);
+        KEYBOARD_INPUT_HANDLER = new KeyboardInput(this);
+        INPUT_STREAM_HANDLER = new InputStreamHandler();
+        
     	if(selfActivation) 
     	{
     		activateConsole();
@@ -49,9 +51,11 @@ public class Console {
     	WINDOW.setFocusableWindowState(true);
     	WINDOW.requestFocusInWindow();
 
-    	WINDOW.addKeyListener(KEY_CONTROL);
-        CONSOLE_OUTPUT.addKeyListener(KEY_CONTROL);
-        CONSOLE_INPUT.addKeyListener(KEY_CONTROL);
+    	WINDOW.addKeyListener(KEYBOARD_INPUT_HANDLER);
+        CONSOLE_OUTPUT.addKeyListener(KEYBOARD_INPUT_HANDLER);
+        CONSOLE_INPUT.addKeyListener(KEYBOARD_INPUT_HANDLER);
+        CONSOLE_OUTPUT.addKeyListener(INPUT_STREAM_HANDLER);
+        CONSOLE_INPUT.addKeyListener(INPUT_STREAM_HANDLER);
         //CONSOLE_OUTPUT.setFocusable(false);
         
         Action beepOutput = CONSOLE_OUTPUT.getActionMap().get(DefaultEditorKit.deletePrevCharAction);
@@ -223,7 +227,7 @@ public class Console {
         synchronized(this) {
             try
             {
-                KEY_CONTROL.startInputListening();
+                KEYBOARD_INPUT_HANDLER.startInputListening();
                 this.wait();
             } catch (InterruptedException e) {
                 System.out.println("Caught:" + e);
@@ -284,7 +288,7 @@ public class Console {
     	synchronized(this) {
             try
             {
-                KEY_CONTROL.startInputListeningForAnyKey();
+                KEYBOARD_INPUT_HANDLER.startInputListeningForAnyKey();
                 this.wait();
             } catch (InterruptedException e) {
                 System.out.println("Caught:" + e);
@@ -301,7 +305,7 @@ public class Console {
         {
             try
             {
-                KEY_CONTROL.startInputListeningWithUserInput(userInput);
+                KEYBOARD_INPUT_HANDLER.startInputListeningWithUserInput(userInput);
                 this.wait();
             } catch (InterruptedException e) {
                 System.out.println("Caught:" + e);
@@ -309,48 +313,14 @@ public class Console {
         }
     }
 
-    public void addInputStackRequest(InputRequestStack arg)
+    public void addInputStream(InputStream inputStream) 
     {
-        INPUT_REQUEST_STACK_LIST.add(arg);
-        CONSOLE_OUTPUT.addKeyListener(arg);
-        CONSOLE_INPUT.addKeyListener(arg);
-        arg.setConsole(this);
-        CONSOLE_OUTPUT.requestFocus();
+    	INPUT_STREAM_HANDLER.addInputStream(inputStream);
     }
-
-    protected void removeKeyListener(InputRequestStack arg)
+    
+    public void removeInputStream(InputStream inputStream) 
     {
-        CONSOLE_INPUT.removeKeyListener(arg);
-        CONSOLE_OUTPUT.removeKeyListener(arg);
-    }
-
-    public void removeInputStackRequestAtIndex(int arg)
-    {
-        INPUT_REQUEST_STACK_LIST.remove(arg);
-    }
-
-    public void removeInputStackRequestWithChar(char arg)
-    {
-        for(InputRequestStack stack : INPUT_REQUEST_STACK_LIST)
-        {
-            if(stack.getChar() == arg)
-            {
-                INPUT_REQUEST_STACK_LIST.remove(stack);
-                break;
-            }
-        }
-    }
-
-    public void removeInputStackRequest(InputRequestStack arg)
-    {
-        for(InputRequestStack stack : INPUT_REQUEST_STACK_LIST)
-        {
-            if(stack == arg)
-            {
-                INPUT_REQUEST_STACK_LIST.remove(stack);
-                break;
-            }
-        }
+    	INPUT_STREAM_HANDLER.removeInputStream(inputStream);
     }
 
 }
