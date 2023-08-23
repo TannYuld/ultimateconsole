@@ -81,13 +81,6 @@ public class Console {
     	WINDOW.dispose();
     }
     
-    public Console switchConsole(Console console) 
-    {
-    	terminateConsole();
-    	console.activateConsole();
-    	return console;
-    }
-    
     public void showWindow() 
     {
     	WINDOW.setVisible(true);
