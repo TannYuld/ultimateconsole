@@ -1,10 +1,12 @@
 package ultimateconsole;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class WindowProperties
 {
-    private Window assignedWindow;
+    private ArrayList<Window> assignedWindowList = new ArrayList<Window>();
 
     // Default variables
     private int windowHeight = 325;
@@ -33,9 +35,15 @@ public class WindowProperties
 
     private WindowProperties changeProperties()
     {
-        if(assignedWindow != null)
+        if(!assignedWindowList.isEmpty())
         {
-            assignedWindow.setProperty(this);
+            Iterator<Window> itr = assignedWindowList.iterator();
+            
+            while(itr.hasNext()) 
+            {
+            	var window = itr.next();
+            	window.setProperties(this);
+            }
         }
         return this;
     }
@@ -154,9 +162,27 @@ public class WindowProperties
         return changeProperties();
     }
 
-    protected void setAssignedWindow(Window arg)
+    protected void addToAssignedWindowList(Window arg)
     {
-        this.assignedWindow = arg;
+    	assignedWindowList.add(arg);
+    }
+    
+    protected void removeFromAssignedWindowList(Window arg) 
+    {
+    	if(assignedWindowList.contains(arg)) 
+    	{
+    		Iterator<Window> itr = assignedWindowList.iterator();
+    		
+    		while(itr.hasNext()) 
+    		{
+    			var window = itr.next();
+    			
+    			if(window == arg) 
+    			{
+    				itr.remove();
+    			}
+    		}
+    	}
     }
 
     protected int getWindowHeight() { return windowHeight;}

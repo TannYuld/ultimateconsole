@@ -40,7 +40,7 @@ class KeyboardInput extends Thread implements KeyListener
     protected KeyboardInput(Console Console)
     {
         this.CONSOLE = Console;
-        DRAW_PANEL = CONSOLE.getCurrentWindow().getDrawPanel();
+        DRAW_PANEL = CONSOLE.getActiveWindow().getElements().getDrawPanel();
     }
 
     @Override
