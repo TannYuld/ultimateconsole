@@ -145,10 +145,10 @@ For more examples and detailed [usage instructions]() and [example projects](), 
 
 ## License
 
-This project is licensed under the [MIT License](https://chat.openai.com/LICENSE).
+This project is licensed under the [MIT License](https://mit-license.org/).
 
 ## Acknowledgements
 
 The UltimateConsole project was inspired by the need for a simplified way to create console applications in Java.
 
-If you have any questions, issues, or suggestions, feel free to open an [issue](https://github.com/yourusername/ultimate-console/issues) on GitHub.
+If you have any questions, issues, or suggestions, feel free to open an [issue](https://github.com/TannYuld/ultimateconsole/issues) on GitHub.
