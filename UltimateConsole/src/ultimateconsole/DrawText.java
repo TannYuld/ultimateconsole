@@ -1,5 +1,5 @@
 package ultimateconsole;
 
-public record DrawText(String text, DrawDimension dimension)
+record DrawText(String text, DrawDimension dimension)
 {
 }

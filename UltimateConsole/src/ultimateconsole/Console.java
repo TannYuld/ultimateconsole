@@ -76,11 +76,6 @@ public class Console {
         System.exit(0);
     }
     
-    public void terminateConsole() 
-    {
-    	WINDOW.dispose();
-    }
-    
     public void showWindow() 
     {
     	WINDOW.setVisible(true);

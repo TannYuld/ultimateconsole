@@ -14,7 +14,7 @@ public class UserInput
         this.inputType = inputType;
     }
 
-    public UserInput addQuestion(String questionText)  {
+    public UserInput addAnswer(String questionText)  {
         if(inputType == UserInputTypes.YesNo && questions.size() > 1)
         {
             throw new RuntimeException("YesNo question type can't have more than 2 question");

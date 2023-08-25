@@ -7,7 +7,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
-public class DrawPanel extends JPanel
+class DrawPanel extends JPanel
 {
     private final Window WINDOW;
 

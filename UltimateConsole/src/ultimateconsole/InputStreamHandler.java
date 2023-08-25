@@ -7,26 +7,53 @@ import java.util.Iterator;
 
 class InputStreamHandler implements KeyListener
 {
-	private	ArrayList<InputStream> keyReleaseActionStreamList = new ArrayList<>();
-	private ArrayList<InputStream> keyPressActionStreamList = new ArrayList<>();
+	private	ArrayList<InputStream> inputStreamList = new ArrayList<>();
 	private ArrayList<InputStream> inputStreamWaitlistForAwake = new ArrayList<>();
+	private ArrayList<InputStream> inputStreamBeingPressedList = new ArrayList<>();
+	
+	public InputStreamHandler() 
+	{
+		Thread timerThread = new Thread() {
+			@Override
+			public void run() 
+			{
+				while(true) 
+				{
+					try
+					{
+						Thread.sleep(1000);
+					} catch (InterruptedException e)
+					{
+						e.printStackTrace();
+					}
+					
+					Iterator itr = inputStreamBeingPressedList.iterator();
+					
+					while(itr.hasNext())
+					{
+						InputStream stream = (InputStream) itr.next();
+						
+						stream.setTimer(stream.getTimer()+1);
+						if(stream.getTimer() >= stream.getHoldWaitTime()) 
+						{
+							stream.keyHold();
+							stream.setTimer(0);
+						}
+					}
+				}
+			}
+		};
+		timerThread.start();
+	}
 	
 	public void addInputStream(InputStream inputStream) 
 	{
-		switch(inputStream.getTriggerType()) 
-		{
-			case PRESS -> keyPressActionStreamList.add(inputStream);
-			case RELEASE -> keyReleaseActionStreamList.add(inputStream);
-		}
+		inputStreamList.add(inputStream);
 	}
 	
 	public void removeInputStream(InputStream inputStream) 
 	{
-		switch(inputStream.getTriggerType()) 
-		{
-			case PRESS -> searchAndRemoveInputStream(keyPressActionStreamList, inputStream);
-			case RELEASE -> searchAndRemoveInputStream(keyReleaseActionStreamList, inputStream);
-		}
+		searchAndRemoveInputStream(inputStreamList, inputStream);
 	}
 	
 	private void searchAndRemoveInputStream(ArrayList<InputStream> searchedList, 
@@ -53,13 +80,13 @@ class InputStreamHandler implements KeyListener
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-		handleKeyInput(e, keyPressActionStreamList, TriggerType.PRESS);
+		handleKeyInput(e, inputStreamList, TriggerType.PRESS);
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
-		handleKeyInput(e, keyReleaseActionStreamList, TriggerType.RELEASE);
+		handleKeyInput(e, inputStreamList, TriggerType.RELEASE);
 	}
 	
 	private void handleKeyInput(KeyEvent e, ArrayList<InputStream> arrayList, TriggerType typeOfTrigger) 
@@ -72,7 +99,7 @@ class InputStreamHandler implements KeyListener
 			InputStream streamToWake = keyWaitlistIterator.next();
 			if(streamToWake.getActionKey() == e.getKeyChar()) 
 			{
-				if(streamToWake.getTriggerType() != typeOfTrigger) 
+				if(streamToWake.getLastTriggerType() != typeOfTrigger) 
 				{
 					streamToWake.setCanPerformAction(true);
 					keyWaitlistIterator.remove();
@@ -93,10 +120,29 @@ class InputStreamHandler implements KeyListener
 					}else if(stream.getForceNewAction()) 
 					{
 						stream.setCanPerformAction(false);
+						stream.setLastTriggerType(typeOfTrigger);
 						inputStreamWaitlistForAwake.add(stream);
 					}
 					
-					stream.performAction();
+					switch(typeOfTrigger) 
+					{
+						case PRESS:
+							stream.keyPressed();
+							if(!inputStreamBeingPressedList.contains(stream)) 
+							{
+								stream.setTimer(0);
+								inputStreamBeingPressedList.add(stream);
+							}
+							break;
+							
+						case RELEASE:
+							stream.keyReleased();
+							if(inputStreamBeingPressedList.contains(stream)) 
+							{
+								inputStreamBeingPressedList.remove(stream);
+							}
+							break;
+					}
 				}
 			}
 		}

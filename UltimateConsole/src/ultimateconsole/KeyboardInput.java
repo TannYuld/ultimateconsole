@@ -51,6 +51,22 @@ class KeyboardInput extends Thread implements KeyListener
     {
         if(listensInput)
         {       
+        	
+        	if(e.getKeyCode()  == KeyEvent.VK_BACK_SPACE) 
+        	{
+        		var textArea = CONSOLE.getCurrentWindow().getInputTextArea();
+        		if(!textArea.getText().isEmpty()) 
+        		{
+        			if(textArea.getSelectedText() != null) 
+        			{
+        				textArea.replaceSelection(null);
+        			}else 
+        			{
+        				textArea.setText(textArea.getText().substring(0, textArea.getText().length()-1));
+        			}
+        		}
+        	}
+        	
             if(e.getKeyCode() == KeyEvent.VK_ENTER || listenForAnyKey) 
             {
             	if((userInput != null &&

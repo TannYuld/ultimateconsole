@@ -1,7 +1,8 @@
 package ultimateconsole;
 
-public enum TriggerType
+enum TriggerType
 {
 	PRESS,
-	RELEASE
+	RELEASE,
+	HOLD
 }

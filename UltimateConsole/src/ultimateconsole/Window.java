@@ -36,7 +36,8 @@ public class Window extends JFrame {
 
         INPUT_TEXTAREA.setBorder(null);
         OUTPUT_TEXTAREA.setEditable(false);
-        OUTPUT_TEXTAREA.setLineWrap(false);
+//        OUTPUT_TEXTAREA.setLineWrap(true);
+        OUTPUT_TEXTAREA.setWrapStyleWord(true);
         INPUT_TEXTAREA.setEditable(false);
         INPUT_TEXTAREA.setEnabled(false);
 
@@ -73,7 +74,6 @@ public class Window extends JFrame {
     public void setProperty(WindowProperties prop)
     {
         property = prop;
-        OUTPUT_TEXTAREA.setLineWrap(prop.getLineWrapping());
         
         setSize(new Dimension(prop.getWindowWidth(), prop.getWindowHeight()));
         LAYERED_PANE.setSize(new Dimension(property.getWindowWidth(), prop.getWindowHeight()));
@@ -97,6 +97,8 @@ public class Window extends JFrame {
         OUTPUT_TEXTAREA.setSelectedTextColor(prop.getOutputSelectedTextColor());
         
         setAlwaysOnTop(prop.getAlwaysOnTop());
+        
+        OUTPUT_TEXTAREA.setLineWrap(prop.getLineWrapping());
 
         if(prop.getFullscreen())
         {
