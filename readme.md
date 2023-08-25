@@ -25,7 +25,7 @@ To use the UltimateConsole project in your Java application, follow these steps:
    
    
    ```bash
-   git clone https://github.com/yourusername/ultimate-console.git
+   git clone https://github.com/TannYuld/ultimateconsole.git
    ```
 
 2. Include the necessary Java files from the repository in your project's source code.
