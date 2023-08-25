@@ -18,7 +18,15 @@ The UltimateConsole project is designed to simplify the process of creating inte
 
 To use the UltimateConsole project in your Java application, follow these steps:
 
-1. Clone or download this repository to your local machine.
+1. **Clone or Download the Repository:**
+   
+   Start by cloning or downloading the UltimateConsole repository to your local machine. You can do this using Git with the following command:
+   
+   
+   
+   ```bash
+   git clone https://github.com/yourusername/ultimate-console.git
+   ```
 
 2. Include the necessary Java files from the repository in your project's source code.
 
@@ -145,10 +153,10 @@ For more examples and detailed [usage instructions]() and [example projects](), 
 
 ## License
 
-This project is licensed under the [MIT License](https://mit-license.org/).
+This project is licensed under the [MIT License](https://chat.openai.com/LICENSE).
 
 ## Acknowledgements
 
 The UltimateConsole project was inspired by the need for a simplified way to create console applications in Java.
 
-If you have any questions, issues, or suggestions, feel free to open an [issue](https://github.com/TannYuld/ultimateconsole/issues) on GitHub.
+If you have any questions, issues, or suggestions, feel free to open an [issue](https://github.com/yourusername/ultimate-console/issues) on GitHub.
