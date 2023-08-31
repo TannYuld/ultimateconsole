@@ -100,7 +100,7 @@ switch(question.getResult())
 }
 ```
 
-More info about this topic can be found in [example projects]() file.
+More info about this topic can be found in [example projects](https://github.com/TannYuld/ultimateconsole/blob/stable/UltimateConsole/examples.md) file.
 
 ## Example Usage
 
@@ -149,7 +149,7 @@ public class ConsoleApp {
 }
 ```
 
-For more examples and detailed [usage instructions]() and [example projects](), refer to the provided Java files and their documentation within the repository.
+For more examples and detailed [usage instructions]() and [example projects](https://github.com/TannYuld/ultimateconsole/blob/stable/UltimateConsole/examples.md), refer to the provided Java files and their documentation within the repository.
 
 ## License
 
